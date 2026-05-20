@@ -57,7 +57,7 @@ Go to [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## How the allocation algorithm works
+## How the allocation algorithm works.
 
 When a customer submits a lead, the system needs to pick exactly **3 providers** to assign it to.
 
