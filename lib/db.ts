@@ -17,6 +17,15 @@ function createPrismaClient(): PrismaClient {
   return new PrismaClient({
     log: ['error'],
     datasourceUrl: url,
+    // Default transaction options applied to every $transaction call.
+    // maxWait: how long to wait for a pool connection before the transaction
+    // can even start (Prisma default is 2 s — too short for 10 concurrent ops
+    // sharing a connection_limit=3 pool).
+    // timeout: how long the transaction body may run once started.
+    transactionOptions: {
+      maxWait: 30_000,
+      timeout: 20_000,
+    },
   })
 }
 

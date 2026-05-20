@@ -104,6 +104,13 @@ export async function assignLead(leadId: number, serviceId: number) {
         `
       }
     },
-    { timeout: 15_000 }
+    {
+      // maxWait: time to wait for a connection from the pool to START the
+      // transaction. Default is 2 s — far too short when 10 concurrent leads
+      // share a pool of 3 connections. Matches the client-level default in db.ts.
+      maxWait: 30_000,
+      // timeout: budget for the transaction body itself once it has a connection.
+      timeout: 20_000,
+    }
   )
 }
