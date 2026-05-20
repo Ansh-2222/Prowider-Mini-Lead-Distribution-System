@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db'
 import { assignLead } from '@/lib/allocate'
 import { broadcast } from '@/lib/sse'
 
+export const maxDuration = 30
+
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const { name, phone, city, serviceId, description } = body

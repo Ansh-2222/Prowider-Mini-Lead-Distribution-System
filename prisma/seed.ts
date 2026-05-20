@@ -1,8 +1,10 @@
-import { PrismaClient } from '../app/generated/prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  console.log('Seeding database...')
+
   await prisma.service.createMany({
     data: [
       { id: 1, name: 'Service 1' },
@@ -11,6 +13,8 @@ async function main() {
     ],
     skipDuplicates: true,
   })
+
+  console.log('Services seeded')
 
   await prisma.provider.createMany({
     data: Array.from({ length: 8 }, (_, i) => ({
@@ -21,6 +25,8 @@ async function main() {
     skipDuplicates: true,
   })
 
+  console.log('Providers seeded')
+
   await prisma.allocationCursor.createMany({
     data: [
       { serviceId: 1, nextPosition: 0 },
@@ -30,9 +36,14 @@ async function main() {
     skipDuplicates: true,
   })
 
+  console.log('Allocation cursors seeded')
   console.log('Seed complete.')
 }
 
 main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect())
+  .catch((e) => {
+    console.error(e)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

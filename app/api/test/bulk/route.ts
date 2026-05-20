@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db'
 import { assignLead } from '@/lib/allocate'
 import { broadcast } from '@/lib/sse'
 
+export const maxDuration = 60
+
 const SERVICES = [1, 2, 3] as const
 
 function randomPhone() {
