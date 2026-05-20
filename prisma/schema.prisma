@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id     Int    @id
+  name   String @unique
+  leads  Lead[]
+  cursor AllocationCursor?
+
+  @@map("services")
+}
+
+model Provider {
+  id          Int              @id
+  name        String           @unique
+  quotaUsed   Int              @default(0) @map("quota_used")
+  assignments LeadAssignment[]
+
+  @@map("providers")
+}
+
+model Lead {
+  id           Int              @id @default(autoincrement())
+  customerName String           @map("customer_name")
+  phone        String
+  city         String
+  description  String
+  serviceId    Int              @map("service_id")
+  service      Service          @relation(fields: [serviceId], references: [id])
+  createdAt    DateTime         @default(now()) @map("created_at")
+  assignments  LeadAssignment[]
+
+  @@unique([phone, serviceId])
+  @@map("leads")
+}
+
+model LeadAssignment {
+  id         Int      @id @default(autoincrement())
+  leadId     Int      @map("lead_id")
+  providerId Int      @map("provider_id")
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  provider   Provider @relation(fields: [providerId], references: [id])
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  @@unique([leadId, providerId])
+  @@map("lead_assignments")
+}
+
+model AllocationCursor {
+  serviceId    Int     @id @map("service_id")
+  nextPosition Int     @default(0) @map("next_position")
+  service      Service @relation(fields: [serviceId], references: [id])
+
+  @@map("allocation_cursors")
+}
+
+model ProcessedWebhook {
+  idempotencyKey String   @id @map("idempotency_key")
+  processedAt    DateTime @default(now()) @map("processed_at")
+
+  @@map("processed_webhooks")
+}

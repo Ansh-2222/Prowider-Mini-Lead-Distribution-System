@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+
+# environment variables (keep your DB password private)
+.env
+.env.local
+.env.production
+
+# prisma generated client (regenerated on setup)
+app/generated/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# logs
+*.log
+npm-debug.log*
